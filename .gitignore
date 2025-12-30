@@ -1,0 +1,22 @@
+# Datasets (Too large for GitHub)
+graphs/
+*.gr
+*.gz
+
+# Build Artifacts
+FastDuan/parallel_sssp
+FastDuan/adaptive_sssp
+FastDuan/geometric_sssp
+FastDuan/baseline_dijkstra
+FastDuan/reference_sssp
+FastDuan/test_suite
+FastDuan/delta_heuristics
+FastDuan/cache_benchmark
+*.o
+*.dSYM/
+build/
+
+# Logs and Temp
+*.log
+*.csv
+.DS_Store

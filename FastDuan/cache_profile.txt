@@ -1,0 +1,131 @@
+Analysis of sampling cache_benchmark (pid 26080) every 1 millisecond
+Process:         cache_benchmark [26080]
+Path:            /Users/USER/Desktop/*/cache_benchmark
+Load Address:    0x100bb0000
+Identifier:      cache_benchmark
+Version:         0
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  zsh [11552]
+Target Type:     live task
+
+Date/Time:       2025-12-29 15:56:13.301 -0700
+Launch Time:     2025-12-29 15:56:12.860 -0700
+OS Version:      macOS 26.3 (25D5087f)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+----
+
+Call graph:
+    752 Thread_299373   DispatchQueue_1: com.apple.main-thread  (serial)
+      752 start  (in dyld) + 7184  [0x19012dd54]
+        151 main  (in cache_benchmark) + 2980  [0x100bb30ac]
+        + 151 cache_sssp::dijkstra_adjlist(cache_sssp::AdjListGraph const&, unsigned long)  (in cache_benchmark) + 236,308,...  [0x100bb0624,0x100bb066c,...]
+        148 main  (in cache_benchmark) + 5304  [0x100bb39c0]
+        + 148 cache_sssp::dijkstra_csr_prefetch(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 308,236,...  [0x100bb0fbc,0x100bb0f74,...]
+        141 main  (in cache_benchmark) + 4100  [0x100bb350c]
+        + 141 cache_sssp::dijkstra_csr(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 584,308,...  [0x100bb0cc0,0x100bb0bac,...]
+        54 main  (in cache_benchmark) + 6520  [0x100bb3e80]
+        + 45 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 512,456,...  [0x100bb14d8,0x100bb14a0,...]
+        + 4 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 648  [0x100bb1560]
+        + ! 3 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x1904aea78]
+        + ! : 2 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 276,828  [0x19031a294,0x19031a4bc]
+        + ! : 1 DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib) + 8  [0x1904aee88]
+        + ! 1 operator new(unsigned long)  (in libc++abi.dylib) + 36  [0x1904aea68]
+        + 2 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 1004  [0x100bb16c4]
+        + ! 2 _platform_memmove  (in libsystem_platform.dylib) + 0,436  [0x190500380,0x190500534]
+        + 2 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 1024  [0x100bb16d8]
+        + ! 1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1903168a0]
+        + ! : 1 _platform_memset  (in libsystem_platform.dylib) + 180  [0x190500164]
+        + ! 1 _xzm_free  (in libsystem_malloc.dylib) + 692  [0x1903169f8]
+        + 1 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 1160  [0x100bb1760]
+        +   1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1903168a0]
+        +     1 DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib) + 8  [0x19032b45c]
+        31 main  (in cache_benchmark) + 2860  [0x100bb3034]
+        + 31 cache_sssp::dijkstra_adjlist(cache_sssp::AdjListGraph const&, unsigned long)  (in cache_benchmark) + 572,308,...  [0x100bb0774,0x100bb066c,...]
+        30 main  (in cache_benchmark) + 3944  [0x100bb3470]
+        + 30 cache_sssp::dijkstra_csr(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 308,236,...  [0x100bb0bac,0x100bb0b64,...]
+        30 main  (in cache_benchmark) + 5168  [0x100bb3938]
+        + 30 cache_sssp::dijkstra_csr_prefetch(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 236,308,...  [0x100bb0f74,0x100bb0fbc,...]
+        30 main  (in cache_benchmark) + 5200  [0x100bb3958]
+        + 30 cache_sssp::dijkstra_csr_prefetch(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 236,308,...  [0x100bb0f74,0x100bb0fbc,...]
+        29 main  (in cache_benchmark) + 5148  [0x100bb3924]
+        + 29 cache_sssp::dijkstra_csr_prefetch(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 648,236,...  [0x100bb1110,0x100bb0f74,...]
+        28 main  (in cache_benchmark) + 3964  [0x100bb3484]
+        + 28 cache_sssp::dijkstra_csr(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 236,584,...  [0x100bb0b64,0x100bb0cc0,...]
+        28 main  (in cache_benchmark) + 3996  [0x100bb34a4]
+        + 28 cache_sssp::dijkstra_csr(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark) + 308,236,...  [0x100bb0bac,0x100bb0b64,...]
+        12 main  (in cache_benchmark) + 6340  [0x100bb3dcc]
+        + 10 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 512,372,...  [0x100bb14d8,0x100bb144c,...]
+        + 2 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 1024  [0x100bb16d8]
+        +   1 _free  (in libsystem_malloc.dylib) + 0  [0x190323a2c]
+        +   1 _xzm_free  (in libsystem_malloc.dylib) + 28  [0x190316760]
+        11 main  (in cache_benchmark) + 6364  [0x100bb3de4]
+        + 11 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 512,372,...  [0x100bb14d8,0x100bb144c,...]
+        11 main  (in cache_benchmark) + 6400  [0x100bb3e08]
+        + 11 cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark) + 512,372,...  [0x100bb14d8,0x100bb144c,...]
+        10 main  (in cache_benchmark) + 2828  [0x100bb3014]
+        + 10 cache_sssp::dijkstra_adjlist(cache_sssp::AdjListGraph const&, unsigned long)  (in cache_benchmark) + 572,236,...  [0x100bb0774,0x100bb0624,...]
+        5 main  (in cache_benchmark) + 9488  [0x100bb4a18]
+        + 3 _xzm_free  (in libsystem_malloc.dylib) + 352,388,...  [0x1903168a4,0x1903168c8,...]
+        + 1 DYLD-STUB$$free  (in libc++abi.dylib) + 8  [0x1904aee48]
+        + 1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1903168a0]
+        +   1 _platform_memset  (in libsystem_platform.dylib) + 208  [0x190500180]
+        3 main  (in cache_benchmark) + 3336,4480,...  [0x100bb3210,0x100bb3688,...]
+
+Total number in stack (recursive counted multiple, when >=5):
+
+Sort by top of stack, same collapsed (when >= 5):
+        cache_sssp::dijkstra_csr_prefetch(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark)        237
+        cache_sssp::dijkstra_csr(cache_sssp::CSRGraph const&, unsigned long)  (in cache_benchmark)        227
+        cache_sssp::dijkstra_adjlist(cache_sssp::AdjListGraph const&, unsigned long)  (in cache_benchmark)        192
+        cache_sssp::delta_stepping(cache_sssp::CSRGraph const&, unsigned long, double)  (in cache_benchmark)        77
+        _xzm_free  (in libsystem_malloc.dylib)        5
+
+Binary Images:
+       0x100bb0000 -        0x100bb6cdf +cache_benchmark (0) <8196D081-33DC-3D5A-975C-0A06824B0EE0> /Users/*/Desktop/*/cache_benchmark
+       0x1900a0000 -        0x1900f348b  libobjc.A.dylib (951.1) <824F777A-752D-3214-AAA3-343421254B19> /usr/lib/libobjc.A.dylib
+       0x1900f4000 -        0x190124bcb  libdyld.dylib (1335) <089169F1-D5C9-3198-9218-FE649805043F> /usr/lib/system/libdyld.dylib
+       0x190125000 -        0x1901c3fff  dyld (1.0.0 - 1335) <C273E728-B84B-3D23-B12B-DE4FEEB85C6D> /usr/lib/dyld
+       0x1901c4000 -        0x1901c71d0  libsystem_blocks.dylib (96) <C7B2F7D7-3297-3AD0-94E9-11711172FAEC> /usr/lib/system/libsystem_blocks.dylib
+       0x1901c8000 -        0x19021d01f  libxpc.dylib (3089.80.8) <A53E5AA4-D7F3-3FBF-B0D9-B76FC5D31EC6> /usr/lib/system/libxpc.dylib
+       0x19021e000 -        0x19023e8df  libsystem_trace.dylib (1815.80.2) <2CE65847-372F-3B1E-AD3E-7733F5D11ED3> /usr/lib/system/libsystem_trace.dylib
+       0x19023f000 -        0x1902eb96f  libcorecrypto.dylib (1922.60.11) <AA6BE804-5900-385F-A939-45D9140EC982> /usr/lib/system/libcorecrypto.dylib
+       0x1902ec000 -        0x190337bff  libsystem_malloc.dylib (792.80.1) <D8130B43-17DE-34FA-AE22-92F5975DF7F6> /usr/lib/system/libsystem_malloc.dylib
+       0x190338000 -        0x19037ee5f  libdispatch.dylib (1542.0.4) <CB437CD2-6DDD-3FA4-88A5-39594AF27708> /usr/lib/system/libdispatch.dylib
+       0x19037f000 -        0x190381feb  libsystem_featureflags.dylib (101) <B78E8DDC-9A96-38D7-B34E-C34EA9F874A9> /usr/lib/system/libsystem_featureflags.dylib
+       0x190382000 -        0x190404047  libsystem_c.dylib (1725.40.4) <32DCB8F9-7BD6-3BBF-80E5-913D3C93D2B2> /usr/lib/system/libsystem_c.dylib
+       0x190405000 -        0x190497ea3  libc++.1.dylib (2000.67) <DEEB8903-2B87-31A0-9EAF-F427C358CE62> /usr/lib/libc++.1.dylib
+       0x190498000 -        0x1904b292f  libc++abi.dylib (2000.67) <32CE2BE4-BF92-3B10-907C-C93423C39348> /usr/lib/libc++abi.dylib
+       0x1904b3000 -        0x1904ef4af  libsystem_kernel.dylib (12377.80.260.0.1) <1EAABA37-2B13-3471-BA47-FAC07768FE2C> /usr/lib/system/libsystem_kernel.dylib
+       0x1904f0000 -        0x1904fcabb  libsystem_pthread.dylib (539) <D38CA116-3DB2-3366-A9CB-9C96C92AFBAC> /usr/lib/system/libsystem_pthread.dylib
+       0x1904fd000 -        0x1905054af  libsystem_platform.dylib (359.80.2) <82DC38AD-44D1-3E48-B34F-B8BD21DA73DE> /usr/lib/system/libsystem_platform.dylib
+       0x190506000 -        0x190535e23  libsystem_info.dylib (600) <7E782910-357B-36B6-9C55-299236A7529E> /usr/lib/system/libsystem_info.dylib
+       0x1944af000 -        0x1944b9397  libsystem_darwin.dylib (1725.40.4) <5B24F7D2-82C5-33BB-9A20-922F6F8FCD50> /usr/lib/system/libsystem_darwin.dylib
+       0x194920000 -        0x194931ff3  libsystem_notify.dylib (344.0.1) <D40BEB82-7E1B-3FC7-819B-9BBA6BB09EE3> /usr/lib/system/libsystem_notify.dylib
+       0x196bfe000 -        0x196c18fdb  libsystem_networkextension.dylib (2205.80.6) <75974252-4CEE-3CD9-B4A8-B0233A20CF52> /usr/lib/system/libsystem_networkextension.dylib
+       0x196c9c000 -        0x196cb3ff3  libsystem_asl.dylib (406) <83FBAD61-EBE0-330C-863D-1CD33148C6A4> /usr/lib/system/libsystem_asl.dylib
+       0x198854000 -        0x19885c3b7  libsystem_symptoms.dylib (2158.80.9) <DDCDA406-745F-37B0-9B97-CA9F743288CB> /usr/lib/system/libsystem_symptoms.dylib
+       0x19c7c4000 -        0x19c7fc2bb  libsystem_containermanager.dylib (725.80.4) <E472F9F8-87B3-37CD-8449-3D6C46531A06> /usr/lib/system/libsystem_containermanager.dylib
+       0x19dd24000 -        0x19dd2866f  libsystem_configuration.dylib (1385.80.3) <2CC7217E-E0B6-33F7-B43E-38F17BFDE3C6> /usr/lib/system/libsystem_configuration.dylib
+       0x19dd29000 -        0x19dd2f6a7  libsystem_sandbox.dylib (2680.80.14) <9F645BD8-7950-3063-BA1F-45206F38C4D8> /usr/lib/system/libsystem_sandbox.dylib
+       0x19f2a7000 -        0x19f2aa1fb  libquarantine.dylib (196.40.3) <7CDBD91B-7774-33E8-AC4C-050EB3AB3CB4> /usr/lib/system/libquarantine.dylib
+       0x19fa36000 -        0x19fa3d00b  libsystem_coreservices.dylib (191.3.2) <9D3049D8-3678-3361-A960-9095CCACDF7D> /usr/lib/system/libsystem_coreservices.dylib
+       0x19ff8b000 -        0x19ffc88b7  libsystem_m.dylib (3309) <21A74E91-63DD-3069-9127-DC65D7EF2971> /usr/lib/system/libsystem_m.dylib
+       0x19ffca000 -        0x19ffcd537  libmacho.dylib (1030.6.3) <80567FB4-8D0D-3B2B-815F-2235ACCB4615> /usr/lib/system/libmacho.dylib
+       0x19ffe7000 -        0x19fff461f  libcommonCrypto.dylib (600035) <69F7B978-85F6-3BD4-A791-102F6D62C641> /usr/lib/system/libcommonCrypto.dylib
+       0x19fff5000 -        0x19fffeb0b  libunwind.dylib (1900.125) <9C3F789A-3497-3F8B-918A-ED914879ABB0> /usr/lib/system/libunwind.dylib
+       0x1a0007000 -        0x1a00116ff  libcopyfile.dylib (230.0.1.0.1) <9E4ED109-485C-349E-B28F-DFBA889D757D> /usr/lib/system/libcopyfile.dylib
+       0x1a0012000 -        0x1a001595f  libcompiler_rt.dylib (103.3) <C1A19204-9ABF-37BE-A1F4-C73FABDB7D58> /usr/lib/system/libcompiler_rt.dylib
+       0x1a0016000 -        0x1a001aa1b  libsystem_collections.dylib (1725.40.4) <8BCF08FC-2943-3EDE-9361-4F23C3982A3A> /usr/lib/system/libsystem_collections.dylib
+       0x1a001b000 -        0x1a001e4bf  libsystem_secinit.dylib (168.40.2) <EAD82342-797F-3C7C-89EC-28E70C4CB387> /usr/lib/system/libsystem_secinit.dylib
+       0x1a001f000 -        0x1a0021b57  libremovefile.dylib (84) <5BEFCA72-0425-3E03-9DF0-79549B81B08F> /usr/lib/system/libremovefile.dylib
+       0x1a0022000 -        0x1a0022f27  libkeymgr.dylib (31) <BE50E8F7-7FDD-300B-A276-AA255A4AA8D6> /usr/lib/system/libkeymgr.dylib
+       0x1a0023000 -        0x1a002bf87  libsystem_dnssd.dylib (2881.80.3) <16E8AE26-8AF0-3DF7-A200-191E83D25EA7> /usr/lib/system/libsystem_dnssd.dylib
+       0x1a002c000 -        0x1a00310b3  libcache.dylib (95) <3D1B0B26-216C-385E-9A37-3FCD5A1884D3> /usr/lib/system/libcache.dylib
+       0x1a0032000 -        0x1a0033cf3  libSystem.B.dylib (1356) <F813E54A-9C2C-3164-8270-FA34193FC91B> /usr/lib/libSystem.B.dylib
+       0x28bdd2000 -        0x28bdd9319  libRosetta.dylib (367.3) <8D2011DA-33AE-388D-A7B3-F34302E962E8> /usr/lib/libRosetta.dylib
+       0x28d512000 -        0x28d515deb  libsystem_darwindirectory.dylib (122) <90A04D75-0448-3F73-B162-358465B51E55> /usr/lib/system/libsystem_darwindirectory.dylib
+       0x28d516000 -        0x28d51f34b  libsystem_eligibility.dylib (289.80.52) <3C954E41-003C-3F45-99F9-4393921C2438> /usr/lib/system/libsystem_eligibility.dylib
+       0x28d520000 -        0x28d527873  libsystem_sanitizers.dylib (25) <2B324B9E-93BA-36C0-B9CE-F5C6EB306758> /usr/lib/system/libsystem_sanitizers.dylib
+       0x28d528000 -        0x28d528bb7  libsystem_trial.dylib (474.2.0.5) <ABD764F6-B6A5-305E-9D89-E48DF74970AC> /usr/lib/system/libsystem_trial.dylib
