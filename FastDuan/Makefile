@@ -24,7 +24,7 @@ INCLUDES = -Iinclude
 
 .PHONY: all clean test
 
-all: adaptive_sssp parallel_sssp geometric_sssp delta_heuristics test_suite
+all: adaptive_sssp parallel_sssp geometric_sssp delta_heuristics test_suite baseline_dijkstra reference_sssp ../scripts/gen_rmat
 
 adaptive_sssp: src/adaptive_sssp.cpp include/fast_duan/*.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
@@ -41,8 +41,17 @@ delta_heuristics: bench/delta_heuristics.cpp include/fast_duan/*.hpp
 test_suite: tests/verify_correctness.cpp include/fast_duan/*.hpp
 	$(CXX) $(CXXFLAGS) $(OMP_FLAGS) $(INCLUDES) $< -o $@ $(OMP_LIBS)
 
+baseline_dijkstra: bench/baseline_dijkstra.cpp include/fast_duan/*.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+reference_sssp: bench/reference_sssp.cpp include/fast_duan/*.hpp
+	$(CXX) $(CXXFLAGS) $(OMP_FLAGS) $(INCLUDES) $< -o $@ $(OMP_LIBS)
+
+../scripts/gen_rmat: ../scripts/gen_rmat.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@
+
 test: test_suite
 	./test_suite
 
 clean:
-	rm -f adaptive_sssp parallel_sssp geometric_sssp delta_heuristics test_suite
+	rm -f adaptive_sssp parallel_sssp geometric_sssp delta_heuristics test_suite baseline_dijkstra reference_sssp

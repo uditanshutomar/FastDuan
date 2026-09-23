@@ -1,0 +1,45 @@
+name: C++ checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'FastDuan/**'
+      - 'scripts/gen_rmat.cpp'
+      - '.github/workflows/checks.yml'
+  pull_request:
+    paths:
+      - 'FastDuan/**'
+      - 'scripts/gen_rmat.cpp'
+      - '.github/workflows/checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OMP_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build all executables from source
+        run: make -B -C FastDuan all CXX=g++
+      - name: Compare existing algorithms against Dijkstra
+        run: make -C FastDuan test CXX=g++
+      - name: Smoke-check the slab implementation against the baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          graph_file=$(mktemp)
+          trap 'rm -f "$graph_file"' EXIT
+          ./scripts/gen_rmat 10 16 "$graph_file"
+          baseline=$(./FastDuan/baseline_dijkstra "$graph_file")
+          parallel=$(./FastDuan/parallel_sssp "$graph_file")
+          printf '%s\n' "$baseline" "$parallel"
+          expected=$(sed -n 's/^Checksum: //p' <<< "$baseline")
+          actual=$(sed -n 's/^Checksum: //p' <<< "$parallel")
+          test -n "$expected"
+          test "$actual" = "$expected"

@@ -1,147 +1,86 @@
-<div align="center">
-
 # FastDuan
 
-**High-Performance Parallel SSSP Engine**
+A C++20 and OpenMP implementation of single-source shortest paths, exploring how graph topology and memory allocation affect parallel performance.
 
-*Adaptive Delta-Stepping · Slab Memory Allocator · Lock-Free Parallelism*
+The main implementation combines adaptive delta selection, per-thread buckets, atomic distance updates, and a custom slab allocator. It includes a binary-heap Dijkstra baseline and a separate vector-bucket parallel reference for comparison.
 
-<br/>
+## Start here
 
-![C++](https://img.shields.io/badge/C++20-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)
-![OpenMP](https://img.shields.io/badge/OpenMP-Parallel-FF6A00?style=for-the-badge)
-![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C?style=for-the-badge&logo=cmake&logoColor=white)
+- [Parallel implementation](FastDuan/src/parallel_sssp.cpp): work distribution, distance relaxation, and bucket processing
+- [Memory allocator](FastDuan/include/fast_duan/memory.hpp): thread-local slabs and linked buckets
+- [Graph representation](FastDuan/include/fast_duan/graph.hpp) and [delta selection](FastDuan/include/fast_duan/algorithms.hpp)
+- [Correctness tests](FastDuan/tests/verify_correctness.cpp) and [benchmark notes](paper_context.md)
 
-</div>
+## Build and run a small example
 
----
-
-## Performance
-
-| Benchmark | Graph | Time | Metric |
-|:--|:--|--:|--:|
-| **vs Reference Parallel** | RMAT-20 (1M nodes) | 116 ms vs 358 ms | **3.08x speedup** |
-| **Large-Scale Throughput** | RMAT-24 (16.7M nodes, 268M edges) | 2.69 s | **100 MTEPS** |
-| **Road Network Scaling** | USA-road-d.CAL (4 threads) | 551 ms vs 1238 ms serial | **2.25x parallel** |
-
-> Benchmarked on Apple M3 (8 cores). MTEPS = Million Traversed Edges Per Second.
-
----
-
-## What It Does
-
-FastDuan solves the **Single-Source Shortest Path (SSSP)** problem on large-scale graphs. It beats standard parallel implementations by **3x** through three key innovations:
-
-1. **Adaptive Delta Selection** — Classifies graphs at runtime (road vs. social network topology) using BFS diameter estimation, then selects optimal delta parameters automatically. No manual tuning.
-
-2. **Slab Memory Engine** — Custom thread-local monotonic allocator that hands out 4KB blocks (page-aligned), eliminating `std::vector` resize overhead and lock contention during parallel traversal.
-
-3. **Lock-Free Parallel Bucketing** — Private per-thread buckets with relaxed atomic distance updates. Scales across cores without shared-state bottlenecks.
-
----
-
-## Architecture
-
-```
-FastDuan/
-├── include/fast_duan/
-│   ├── graph.hpp          # CSR graph structure + topology stats
-│   ├── algorithms.hpp     # Delta-stepping (sequential + parallel)
-│   ├── memory.hpp         # Slab allocator (thread-local blocks)
-│   ├── dijkstra.hpp       # Reference Dijkstra baseline
-│   └── io.hpp             # DIMACS graph loader
-├── src/
-│   ├── parallel_sssp.cpp  # OpenMP parallel engine (primary)
-│   ├── adaptive_sssp.cpp  # Serial with auto delta selection
-│   └── geometric_sssp.cpp # Geometric bucket-width variant
-├── bench/
-│   ├── benchmark.cpp      # Full benchmark suite
-│   ├── baseline_dijkstra  # Binary-heap Dijkstra reference
-│   ├── reference_sssp.cpp # Standard parallel (std::vector)
-│   └── cache_benchmark    # Cache behavior profiling
-├── tests/
-│   └── verify_correctness # Validates against Dijkstra ground truth
-└── scripts/
-    ├── reproduce_paper.sh # One-command full reproduction
-    ├── gen_rmat.cpp       # RMAT graph generator (Scale 20-24+)
-    ├── run_suite.sh       # Batch benchmark runner
-    └── analyze_results.py # Results visualization
-```
-
----
-
-## Quick Start
-
-### Build
+Requires Make, a C++20 compiler, and OpenMP. Run the commands below from the repository root after cloning.
 
 ```bash
+git clone https://github.com/uditanshutomar/FastDuan.git
 cd FastDuan
-cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build
+
+# macOS with Apple Clang; install OpenMP once
+brew install libomp
+make -B -C FastDuan all
+make -C FastDuan test
 ```
 
-Requires: **C++20 compiler** (clang++ or g++) and **OpenMP**.
-On macOS with Homebrew: `brew install libomp`
-
-### Run
+On Linux with GCC and its OpenMP runtime, replace the two Make commands with:
 
 ```bash
-# Parallel SSSP on a road network
-OMP_NUM_THREADS=8 ./build/parallel_sssp graphs/road/USA-road-d.CAL.gr
-
-# Adaptive SSSP (auto-selects delta)
-./build/adaptive_sssp graphs/synthetic/rmat-20.gr
-
-# Compare against baseline Dijkstra
-./build/baseline_dijkstra graphs/synthetic/rmat-20.gr
+make -B -C FastDuan all CXX=g++
+make -C FastDuan test CXX=g++
 ```
 
-### Generate Test Graphs
+`-B` rebuilds every executable from source, including the graph generator. The repository also contains a prebuilt generator that may not match your platform.
 
 ```bash
-# Build RMAT generator
-cmake --build build --target gen_rmat
-
-# Generate Scale-20 graph (1M nodes, 16M edges)
-./scripts/gen_rmat 20 16 graphs/synthetic/rmat-20.gr
-
-# Generate Scale-24 graph (16.7M nodes, 268M edges, ~2.3 GB)
-./scripts/gen_rmat 24 16 graphs/synthetic/rmat-24.gr
+mkdir -p graphs/synthetic
+./scripts/gen_rmat 10 16 graphs/synthetic/rmat-10.gr
+OMP_NUM_THREADS=4 ./FastDuan/parallel_sssp graphs/synthetic/rmat-10.gr
+./FastDuan/baseline_dijkstra graphs/synthetic/rmat-10.gr
 ```
 
-### Reproduce All Results
+Both executables print elapsed time and a distance checksum. Matching checksums are a useful smoke check, not a substitute for comparing every distance. The existing test suite compares the sequential and parallel algorithms in `algorithms.hpp` against Dijkstra on seeded random graphs; it does not directly exercise the separate slab-based implementation in `parallel_sssp.cpp`.
+
+## Recorded benchmark results
+
+These are project-recorded measurements on an Apple M3 with 8 cores, documented in the [benchmark notes](paper_context.md). They are specific to those workloads and baselines, not a general claim of superiority over other SSSP libraries.
+
+| Workload | Recorded result | Comparison |
+| --- | --- | --- |
+| RMAT-20, approximately 1M vertices | 116 ms vs. 358 ms | 3.08x faster than this repository's vector-bucket parallel reference |
+| RMAT-24, approximately 16.7M vertices and 268M generated edge attempts | 2.69 seconds | Approximately 100 million edges/second |
+| USA-road-d.CAL | 551 ms vs. 1,238 ms | 4-thread parallel vs. sequential execution |
+
+For larger experiments, build first, then run:
 
 ```bash
-./scripts/reproduce_paper.sh
+bash scripts/reproduce_paper.sh
 ```
 
----
+The script generates RMAT-20 and RMAT-22 workloads and writes `paper_results.csv`. It runs the California road-network case only when `graphs/road/USA-road-d.CAL.gr` is supplied. RMAT-24 is a separate experiment and is not run by this script. Large graphs require substantially more memory and disk than the small example above.
 
-## Graph Format
+## Design choices
 
-DIMACS Challenge 9 `.gr` format:
+- **Adaptive delta selection:** use graph statistics to choose a bucket width rather than fixing one value for every workload
+- **Thread-local allocation:** allocate vertex blocks from slabs to reduce repeated bucket allocation; slabs can still grow during a run
+- **Private buckets and atomic distances:** reduce shared bucket contention while coordinating distance improvements
+- **Monotonic memory:** retain blocks until the traversal ends, trading memory reuse within a run for simpler allocation
 
+## Input format
+
+The executables accept DIMACS Challenge 9 `.gr` files with nonnegative edge weights. Vertex identifiers in the file are one-based; the executables use the first vertex as the source.
+
+```text
+c Comment
+p sp 3 3
+a 1 2 4
+a 2 3 2
+a 1 3 9
 ```
-c Comment line
-p sp <nodes> <edges>
-a <src> <dst> <weight>
-```
 
-Use `scripts/convert_snap.py` to convert SNAP edge-list graphs.
-
----
-
-## How the Slab Allocator Works
-
-Standard parallel delta-stepping uses `std::vector` for buckets — each `push_back` can trigger reallocation with global heap locks, serializing threads. FastDuan replaces this with:
-
-- **Thread-local slabs**: Each thread owns a chain of 4KB blocks (1024 `uint32_t` entries = 1 OS page)
-- **Monotonic allocation**: Blocks are never freed mid-traversal — lifetime matches the SSSP kernel
-- **Zero contention**: No shared allocator locks, no false sharing, no `malloc` calls in the hot loop
-
-This alone accounts for the 3x speedup on social-network graphs where bucket churn is highest.
-
----
+Use [convert_snap.py](scripts/convert_snap.py) to convert SNAP edge lists.
 
 ## License
 
